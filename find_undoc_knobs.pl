@@ -24,7 +24,7 @@ find sub
     if ( $_ eq "Makefile" || m/.mk$/ ) {
         my $file = $_;
         open($fh, $file) || die "$_: $!";
-        /WITH(?:OUT)?_([A-Z0-9]+)/ && push @{$mknobs{$1}}, $File::Find::name
+        /WITH(?:OUT)?_([A-Z0-9_-]+)/ && $mknobs{$1}->{$File::Find::name}++
             for <$fh>;
         close($fh);
     }
@@ -35,10 +35,10 @@ open($fh, $knobsfile) || die "$knobsfile: $!";
 %fknobs = map{ ($_, "") } map { /^([A-Z0-9]+)/ && $1 } <$fh>;
 close($fh);
 
-@uknobs = sort{ @{$mknobs{$b}} <=> @{$mknobs{$a}} }
+@uknobs = sort{ scalar(keys %{$mknobs{$b}}) <=> scalar(keys %{$mknobs{$a}}) }
     grep{! exists $fknobs{$_}} keys %mknobs;
 
 for (@uknobs) {
     printf "$_ (%d)\n", scalar(@{$mknobs{$_}});
-    print "\t".$_."\n" for @{$mknobs{$_}}
+    print "\t".$_."\n" for keys %{$mknobs{$_}}
 }
