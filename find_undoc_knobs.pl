@@ -24,8 +24,8 @@ find sub
     if ( $_ eq "Makefile" || m/.mk$/ ) {
         my $file = $_;
         open($fh, $file) || die "$_: $!";
-            /WITH(?:OUT)?_([A-Z0-9]+)/ && push @{$mknobs{$1}}, $File::Find::name
-                for <$fh>;
+        /WITH(?:OUT)?_([A-Z0-9]+)/ && push @{$mknobs{$1}}, $File::Find::name
+            for <$fh>;
         close($fh);
     }
 }, @ARGV;
@@ -40,7 +40,5 @@ close($fh);
 
 for (@uknobs) {
     printf "$_ (%d)\n", scalar(@{$mknobs{$_}});
-    for (@{$mknobs{$_}}) {
-        print "\t".$_."\n";
-    }
+    print "\t".$_."\n" for @{$mknobs{$_}}
 }
