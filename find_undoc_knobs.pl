@@ -17,7 +17,7 @@ my (%mknobs, @uknobs, %fknobs, $fh);
 my $knobsfile = "/home/lars/projekte/freebsd-ports/KNOBS";
 
 # read in any knobs used in any Makefile or .mk file. (knobname as
-# key, files it appears in as value of as array member.
+# key, files it appears in as keys of a hash member.
 @ARGV = qw(.) unless @ARGV;
 find sub
 {
