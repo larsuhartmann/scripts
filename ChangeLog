@@ -1,3 +1,7 @@
+2011-07-27  Lars Hartmann  <lars@chaotika.org>
+
+	* find_undoc_knobs.pl: changed regex.
+
 2010-09-16  Lars Hartmann  <lars@chaotika.org>
 
 	* find_undoc_knobs.pl: added first script.
