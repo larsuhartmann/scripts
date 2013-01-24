@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# openvpnmgr - manage openvpn users
+
+VPN_BASE="/etc/openvpn"
+
+create_key()
+{
+	cd "$VPN_BASE/easy-rsa"
+	. ./vars
+	. ./build-key-pass "$user"
+	cd -
+}
+
+create_confdir()
+{
+	cd "$VPN_BASE/users"
+	cp -R skel "$user"
+	cp "$VPN_BASE/easy-rsa/keys/$user.crt" "$user"/user.crt
+	cp "$VPN_BASE/easy-rsa/keys/$user.key" "$user"/user.key
+	cd -
+}
+
+zip_confdir()
+{
+	cd "$VPN_BASE/users/$user"
+	zip "../$user.zip" *
+	cd -
+}
+
+print_help()
+{
+	cat <<EOF
+Usage: $0 [options]
+
+Options:
+  -u <user>   user to add/remove/alter
+  -a          addkey
+  -h          Display this information
+EOF
+}
+
+# parse command line arguments
+while getopts ahu: arg; do
+    case "$arg" in
+	a)	ADD_KEY="YES";;
+	u)	user="$OPTARG";;
+	h|?)	print_help; exit 0;;
+    esac
+done
+
+if [ $ADD_KEY ]; then
+    create_key
+    create_confdir
+    zip_confdir
+else
+    print_help
+fi
